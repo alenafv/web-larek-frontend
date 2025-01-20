@@ -8,7 +8,6 @@ export interface ICard {
 }
 
 export interface ICustomer {
-    id: string;
     email: string;
     address: string;
     phone: string;
