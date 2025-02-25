@@ -7,6 +7,7 @@
     "allowJs": true,
     "experimentalDecorators": true,
     "moduleResolution": "node",
+    "strict": false
   },
   "include": ["src/**/*.ts", "src/types/*.d.ts"]
 }

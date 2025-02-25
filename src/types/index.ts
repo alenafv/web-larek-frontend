@@ -1,28 +1,38 @@
 export interface ICard {
-    id: string;
-    description: string;
-    image: string;
-    title: string;
-    category: string;
-    price: number;
+	id: string;
+	description: string;
+	image: string;
+	title: string;
+	category: string;
+	price: number;
 }
 
 export interface ICustomer {
-    email: string;
-    address: string;
-    phone: string;
-    paymentMethod: string;
+	email?: string;
+	address?: string;
+	phone?: string;
+	payment?: string;
 }
 
-export interface ICardData {
-    card: ICard[];
-    preview: string | null;
+export type TCardInfo = Pick<
+	ICard,
+	'id' | 'image' | 'category' | 'title' | 'description' | 'price'
+>;
+
+export type TBasketCard = Pick<ICard, 'id' | 'title' | 'price'>;
+
+export type TOrderForm = Pick<ICustomer, 'payment' | 'address'>;
+
+export type TContactsForm = Pick<ICustomer, 'email' | 'phone'>;
+
+export type FormErrors<T> = Partial<Record<keyof T, string>>;
+
+export interface IOrderRequest extends ICustomer {
+	total?: number;
+	items?: string[];
 }
 
-export type TCardInfo = Pick<ICard, 'image' | 'category' | 'title' | 'description' | 'price'>;
-
-export type TBasket = Pick<ICard, 'title' | 'price'>;
-
-export type TPaymentMethodAndAddress = Pick<ICustomer, 'paymentMethod' | 'address'>;
-
-export type TEmailAndPhone = Pick<ICustomer, 'email' | 'phone'>;
+export interface ISuccess {
+	id: string;
+	total: number;
+}
