@@ -8,23 +8,22 @@ interface IBasketView {
 }
 
 export class Basket extends Component<IBasketView> {
-	protected _list: HTMLElement;
+	public _list: HTMLElement;
 	protected _total: HTMLElement;
 	protected _button: HTMLButtonElement;
 
 	constructor(container: HTMLElement, protected events: EventEmitter) {
 		super(container);
 
-		this._list = ensureElement<HTMLElement>('.basket__list');
-		this._total = ensureElement<HTMLElement>('.basket__price');
-		this._button = document.querySelector<HTMLButtonElement>('.modal__actions');
+		this._list = ensureElement<HTMLElement>('.basket__list', this.container);
+		this._total = ensureElement<HTMLElement>('.basket__price', this.container);
+		this._button = ensureElement<HTMLButtonElement>('.basket__button', this.container);
 
 		if (this._button) {
 			this._button.addEventListener('click', () => {
 				events.emit('order:open');
 			});
 		}
-
 		this.items = [];
 	}
 
@@ -41,4 +40,9 @@ export class Basket extends Component<IBasketView> {
 			this._button.disabled = true;
 		}
 	}
+
+	set total(value: number) {
+		this._total.textContent = `${value} синапсов`;
 }
+}
+

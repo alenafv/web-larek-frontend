@@ -18,10 +18,14 @@ export class Success extends Component<ISuccess> {
 			'.order-success__description',
 			this.container
 		);
-		this.closeButton = ensureElement(
+		this.closeButton = ensureElement<HTMLButtonElement>(
 			'.order-success__close',
 			this.container
-		) as HTMLButtonElement;
+		);
+
+		this.closeButton.addEventListener('click', () => {
+			this.events.emit('success:close');
+		});
 	}
 
 	set total(value: number) {

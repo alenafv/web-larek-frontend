@@ -10,17 +10,13 @@ interface ICardActions {
 
 export class BaseCard<T> extends Component<T> {
 	protected _title: HTMLElement;
-	protected _image?: HTMLImageElement;
-	protected _category?: HTMLElement;
+    protected _price: HTMLElement;
 
 	constructor(protected container: HTMLElement, actions?: ICardActions) {
 		super(container);
 
 		this._title = ensureElement<HTMLElement>('.card__title', this.container);
-		this._image =
-			this.container.querySelector<HTMLImageElement>('.card__image');
-		this._category =
-			this.container.querySelector<HTMLElement>('.card__category');
+        this._price = ensureElement<HTMLElement>('.card__price', this.container);
 
 		if (actions?.onClick) {
 			container.addEventListener('click', actions.onClick);
@@ -39,12 +35,11 @@ export class BaseCard<T> extends Component<T> {
 		this.setText(this._title, value);
 	}
 
-	set image(value: string) {
-		this.setImage(this._image, value, this.title);
-	}
-
-	set category(value: string) {
-		this.setText(this._category, value);
+    set price(value: number | null) {
+		this.setText(
+			this._price,
+			value !== null ? `${value} синапсов` : 'Бесценно'
+		);
 	}
 
 	update(data: T) {
@@ -54,18 +49,39 @@ export class BaseCard<T> extends Component<T> {
 
 // Карточка в каталоге
 export class CatalogCard extends BaseCard<TCardInfo> {
-	protected _price: HTMLElement;
+    protected _image?: HTMLImageElement;
+	protected _category?: HTMLElement;
 
 	constructor(container: HTMLElement, actions?: ICardActions) {
 		super(container, actions);
-		this._price = ensureElement<HTMLElement>(`.card__price`, container);
+
+        this._image =
+        this.container.querySelector<HTMLImageElement>('.card__image');
+    this._category =
+        this.container.querySelector<HTMLElement>('.card__category');
 	}
 
-	set price(value: number | null) {
-		this.setText(
-			this._price,
-			value !== null ? `${value} синапсов` : 'Бесценно'
-		);
+    set image(value: string) {
+		this.setImage(this._image, value, this.title);
+	}
+
+	set category(value: string) {
+        if (!this._category) return;
+
+        const categoryMap: Record<string, string> = {
+            'софт-скил': 'soft',
+            'хард-скил': 'hard',
+            'другое': 'other',
+            'дополнительное': 'additional',
+            'кнопка': 'button'
+        };
+
+        const normalizedCategory = categoryMap[value.toLowerCase()] || 'other';
+
+        this._category.className = 'card__category';
+        this._category.classList.add(`card__category_${normalizedCategory}`);
+    
+		this.setText(this._category, value);
 	}
 }
 
@@ -73,7 +89,8 @@ export class CatalogCard extends BaseCard<TCardInfo> {
 export class PreviewCard extends BaseCard<TCardInfo> {
 	protected _description?: HTMLElement;
 	protected _addButton?: HTMLButtonElement;
-	protected _price: HTMLElement;
+    protected _image?: HTMLImageElement;
+	protected _category?: HTMLElement;
 
 	constructor(container: HTMLElement, actions?: ICardActions) {
 		super(container, actions);
@@ -82,7 +99,10 @@ export class PreviewCard extends BaseCard<TCardInfo> {
 			'.card__button',
 			this.container
 		);
-		this._price = ensureElement<HTMLElement>('.card__price', this.container);
+        this._image =
+        this.container.querySelector<HTMLImageElement>('.card__image');
+    this._category =
+        this.container.querySelector<HTMLElement>('.card__category');
 
 		if (actions?.onAddToBasket) {
 			this._addButton.addEventListener('click', (event) => {
@@ -96,11 +116,27 @@ export class PreviewCard extends BaseCard<TCardInfo> {
 		this.setText(this._description, value);
 	}
 
-	set price(value: number | null) {
-		this.setText(
-			this._price,
-			value !== null ? `${value} синапсов` : 'Бесценно'
-		);
+    set image(value: string) {
+		this.setImage(this._image, value, this.title);
+	}
+
+	set category(value: string) {
+        if (!this._category) return;
+
+        const categoryMap: Record<string, string> = {
+            'софт-скил': 'soft',
+            'хард-скил': 'hard',
+            'другое': 'other',
+            'дополнительное': 'additional',
+            'кнопка': 'button'
+        };
+
+        const normalizedCategory = categoryMap[value.toLowerCase()] || 'other';
+
+        this._category.className = 'card__category';
+        this._category.classList.add(`card__category_${normalizedCategory}`);
+    
+		this.setText(this._category, value);
 	}
 
 	setButtonText(text: string) {
@@ -113,16 +149,13 @@ export class PreviewCard extends BaseCard<TCardInfo> {
 // Карточка в корзине
 export class BasketCard extends BaseCard<TBasketCard> {
 	protected _index: HTMLElement;
-	protected _price: HTMLElement;
 	protected _removeButton: HTMLButtonElement;
 
 	constructor(container: HTMLElement, actions?: ICardActions) {
 		super(container, actions);
-		this._index = ensureElement<HTMLElement>(`.basket__item-index`, container);
-		this._price = ensureElement<HTMLElement>(`.card__price`, container);
+		this._index = ensureElement<HTMLElement>('.basket__item-index', this.container);
 		this._removeButton = ensureElement<HTMLButtonElement>(
-			`.basket__item-delete`,
-			container
+			'.basket__item-delete', container
 		);
 
 		if (actions?.onRemove) {
@@ -135,12 +168,5 @@ export class BasketCard extends BaseCard<TBasketCard> {
 
 	set index(value: number) {
 		this.setText(this._index, String(value));
-	}
-
-	set price(value: number | null) {
-		this.setText(
-			this._price,
-			value !== null ? `${value} синапсов` : 'Бесценно'
-		);
 	}
 }
