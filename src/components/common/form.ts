@@ -44,13 +44,6 @@ export class Form<T> extends Component<IFormState> {
 		this._errors.textContent = value;
 	}
 
-    clear() {
-        const form = this.container as HTMLFormElement;
-        form.reset();
-        this.errors = '';
-		this.valid = false;
-    }
-
 	render(state: Partial<T> & IFormState) {
 		const { valid, errors, ...inputs } = state;
 		super.render({ valid, errors });

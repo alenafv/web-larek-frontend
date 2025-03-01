@@ -10,13 +10,13 @@ interface ICardActions {
 
 export class BaseCard<T> extends Component<T> {
 	protected _title: HTMLElement;
-    protected _price: HTMLElement;
+	protected _price: HTMLElement;
 
 	constructor(protected container: HTMLElement, actions?: ICardActions) {
 		super(container);
 
 		this._title = ensureElement<HTMLElement>('.card__title', this.container);
-        this._price = ensureElement<HTMLElement>('.card__price', this.container);
+		this._price = ensureElement<HTMLElement>('.card__price', this.container);
 
 		if (actions?.onClick) {
 			container.addEventListener('click', actions.onClick);
@@ -35,7 +35,7 @@ export class BaseCard<T> extends Component<T> {
 		this.setText(this._title, value);
 	}
 
-    set price(value: number | null) {
+	set price(value: number | null) {
 		this.setText(
 			this._price,
 			value !== null ? `${value} синапсов` : 'Бесценно'
@@ -49,38 +49,38 @@ export class BaseCard<T> extends Component<T> {
 
 // Карточка в каталоге
 export class CatalogCard extends BaseCard<TCardInfo> {
-    protected _image?: HTMLImageElement;
+	protected _image?: HTMLImageElement;
 	protected _category?: HTMLElement;
 
 	constructor(container: HTMLElement, actions?: ICardActions) {
 		super(container, actions);
 
-        this._image =
-        this.container.querySelector<HTMLImageElement>('.card__image');
-    this._category =
-        this.container.querySelector<HTMLElement>('.card__category');
+		this._image =
+			this.container.querySelector<HTMLImageElement>('.card__image');
+		this._category =
+			this.container.querySelector<HTMLElement>('.card__category');
 	}
 
-    set image(value: string) {
+	set image(value: string) {
 		this.setImage(this._image, value, this.title);
 	}
 
 	set category(value: string) {
-        if (!this._category) return;
+		if (!this._category) return;
 
-        const categoryMap: Record<string, string> = {
-            'софт-скил': 'soft',
-            'хард-скил': 'hard',
-            'другое': 'other',
-            'дополнительное': 'additional',
-            'кнопка': 'button'
-        };
+		const categoryMap: Record<string, string> = {
+			'софт-скил': 'soft',
+			'хард-скил': 'hard',
+			другое: 'other',
+			дополнительное: 'additional',
+			кнопка: 'button',
+		};
 
-        const normalizedCategory = categoryMap[value.toLowerCase()] || 'other';
+		const normalizedCategory = categoryMap[value.toLowerCase()] || 'other';
 
-        this._category.className = 'card__category';
-        this._category.classList.add(`card__category_${normalizedCategory}`);
-    
+		this._category.className = 'card__category';
+		this._category.classList.add(`card__category_${normalizedCategory}`);
+
 		this.setText(this._category, value);
 	}
 }
@@ -89,7 +89,7 @@ export class CatalogCard extends BaseCard<TCardInfo> {
 export class PreviewCard extends BaseCard<TCardInfo> {
 	protected _description?: HTMLElement;
 	protected _addButton?: HTMLButtonElement;
-    protected _image?: HTMLImageElement;
+	protected _image?: HTMLImageElement;
 	protected _category?: HTMLElement;
 
 	constructor(container: HTMLElement, actions?: ICardActions) {
@@ -99,10 +99,10 @@ export class PreviewCard extends BaseCard<TCardInfo> {
 			'.card__button',
 			this.container
 		);
-        this._image =
-        this.container.querySelector<HTMLImageElement>('.card__image');
-    this._category =
-        this.container.querySelector<HTMLElement>('.card__category');
+		this._image =
+			this.container.querySelector<HTMLImageElement>('.card__image');
+		this._category =
+			this.container.querySelector<HTMLElement>('.card__category');
 
 		if (actions?.onAddToBasket) {
 			this._addButton.addEventListener('click', (event) => {
@@ -116,26 +116,26 @@ export class PreviewCard extends BaseCard<TCardInfo> {
 		this.setText(this._description, value);
 	}
 
-    set image(value: string) {
+	set image(value: string) {
 		this.setImage(this._image, value, this.title);
 	}
 
 	set category(value: string) {
-        if (!this._category) return;
+		if (!this._category) return;
 
-        const categoryMap: Record<string, string> = {
-            'софт-скил': 'soft',
-            'хард-скил': 'hard',
-            'другое': 'other',
-            'дополнительное': 'additional',
-            'кнопка': 'button'
-        };
+		const categoryMap: Record<string, string> = {
+			'софт-скил': 'soft',
+			'хард-скил': 'hard',
+			другое: 'other',
+			дополнительное: 'additional',
+			кнопка: 'button',
+		};
 
-        const normalizedCategory = categoryMap[value.toLowerCase()] || 'other';
+		const normalizedCategory = categoryMap[value.toLowerCase()] || 'other';
 
-        this._category.className = 'card__category';
-        this._category.classList.add(`card__category_${normalizedCategory}`);
-    
+		this._category.className = 'card__category';
+		this._category.classList.add(`card__category_${normalizedCategory}`);
+
 		this.setText(this._category, value);
 	}
 
@@ -153,9 +153,13 @@ export class BasketCard extends BaseCard<TBasketCard> {
 
 	constructor(container: HTMLElement, actions?: ICardActions) {
 		super(container, actions);
-		this._index = ensureElement<HTMLElement>('.basket__item-index', this.container);
+		this._index = ensureElement<HTMLElement>(
+			'.basket__item-index',
+			this.container
+		);
 		this._removeButton = ensureElement<HTMLButtonElement>(
-			'.basket__item-delete', container
+			'.basket__item-delete',
+			container
 		);
 
 		if (actions?.onRemove) {

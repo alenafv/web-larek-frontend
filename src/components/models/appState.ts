@@ -1,5 +1,4 @@
 import { Model } from '../base/model';
-import { EventEmitter } from '../base/events';
 import {
 	ICard,
 	ICustomer,
@@ -12,7 +11,6 @@ export interface IAppState {
 	basket: ICard[];
 	catalog: ICard[];
 	preview: string | null;
-	// formErrors: FormErrors<TOrderForm> & FormErrors<TContactsForm>;
 	orderState: ICustomer;
 }
 
@@ -61,7 +59,7 @@ export class AppState extends Model<IAppState> {
 
 	/** Возвращает товары в корзине */
 	getBasketProducts(): string[] {
-		return this.basket.map(product => product.id);
+		return this.basket.map((product) => product.id);
 	}
 
 	/** Возвращает полную информацию о товарах в корзине */
@@ -77,7 +75,7 @@ export class AppState extends Model<IAppState> {
 
 	/** Возвращает товары в корзине с ценой, отличной от null */
 	getValidBasketProducts(): ICard[] {
-		return this.basket.filter(product => product.price !== null);
+		return this.basket.filter((product) => product.price !== null);
 	}
 
 	setOrderField(field: keyof ICustomer, value: string) {
@@ -88,7 +86,7 @@ export class AppState extends Model<IAppState> {
 		}
 	}
 
-	validateOrder(): boolean {
+	validateOrder() {
 		const errors: FormErrors<TOrderForm> & FormErrors<TContactsForm> = {};
 
 		if (!this.orderState.payment)
@@ -97,13 +95,22 @@ export class AppState extends Model<IAppState> {
 		if (!this.orderState.email) errors.email = 'Необходимо указать email';
 		if (!this.orderState.phone) errors.phone = 'Необходимо указать телефон';
 
-		this.emitChanges('formErrors:change', errors);
-
+		this.formErrors = errors;
+		this.events.emit('formErrors:change', this.formErrors);
 		return Object.keys(errors).length === 0;
 	}
 
 	clearBasket() {
 		this.basket = [];
 		this.emitChanges('basket:updated', this.basket);
+	}
+
+	clearForm() {
+		this.orderState = {
+			address: '',
+			payment: '',
+			email: '',
+			phone: '',
+		};
 	}
 }
